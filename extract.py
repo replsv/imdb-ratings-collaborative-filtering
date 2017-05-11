@@ -7,7 +7,7 @@ def extract_ratings(imdb_id):
 	soup = BeautifulSoup(req.text, "html.parser")
 
 	# Extract movie title
-	movie_title = soup.find("title").string.encode('utf-8').replace('- User ratings', '').strip()
+	movie_title = soup.find("title").string.replace('- User ratings', '').strip()
 
 	# Extract ratings table - 2nd table of the page
 	tables = soup.find_all("table")
@@ -23,7 +23,7 @@ def extract_ratings(imdb_id):
 		if details[0].find('a') is None or details[2].find('img') is None:
 			continue
 		user_class = details[0].find('a').text
-		user_rating = float(details[2].find('img').text.strip(" "))
+		user_rating = float(details[2].text.strip(" ").strip("&nbsp"))
 		ratings.update({user_class: { movie_title: user_rating}})
 
 	return ratings
